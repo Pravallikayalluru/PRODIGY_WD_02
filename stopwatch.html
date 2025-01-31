@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: linear-gradient(to top, blue, black);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .stopwatch {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            height: 250px;
+            width: 250px;
+        }
+
+        .head {
+            font-family: Monoton;
+            font-weight: bold;
+            font-size: 30px;
+            color: gold;
+        }
+
+        #time {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .start {
+            background: #28a745;
+            color: white;
+        }
+
+        .stop {
+            background: #dc3545;
+            color: white;
+        }
+
+        .reset {
+            background: #007bff;
+            color: white;
+        }
+
+        .lap {
+            background: #ffc107;
+            color: black;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="head">STOPWATCH</h1>
+	<div class="d-flex flex-row justify-content-center">
+    <div class="stopwatch">
+        <div id="time">00:00:00</div>
+        <button class="start" onclick="startTimer()">Start</button>
+        <button class="stop" onclick="stopTimer()">Stop</button>
+        <button class="reset" onclick="resetTimer()">Reset</button>
+        <button class="lap" onclick="lapTime()">Lap</button>
+        <ul id="laps"></ul>
+    </div></div>
+ 
+    <script>
+        let timer;
+        let isRunning = false;
+        let seconds = 0, minutes = 0, hours = 0;
+
+        const startSound = new Audio('start.mp3');
+        const stopSound = new Audio('stop.mp3');
+        const resetSound = new Audio('reset.mp3');
+        const lapSound = new Audio('lap.mp3');
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                startSound.play(); // Play start sound
+                timer = setInterval(updateTime, 1000);
+            }
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+            isRunning = false;
+            stopSound.play(); // Play stop sound
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            isRunning = false;
+            seconds = minutes = hours = 0;
+            document.getElementById("time").innerText = "00:00:00";
+            document.getElementById("laps").innerHTML = "";
+            resetSound.play(); // Play reset sound
+        }
+
+        function updateTime() {
+            seconds++;
+            if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+                if (minutes === 60) {
+                    minutes = 0;
+                    hours++;
+                }
+            }
+            document.getElementById("time").innerText =
+                (hours < 10 ? "0" + hours : hours) + ":" +
+                (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                (seconds < 10 ? "0" + seconds : seconds);
+        }
+
+        function lapTime() {
+            const lapItem = document.createElement("li");
+            lapItem.innerText = document.getElementById("time").innerText;
+            document.getElementById("laps").appendChild(lapItem);
+            lapSound.play(); // Play lap sound
+        }
+    </script>
+</body>
+
+</html>
